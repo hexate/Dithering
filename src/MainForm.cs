@@ -703,13 +703,21 @@ namespace Cyotek.DitheringTest
           ColorCount = this.GetMaximumColorCount()
         };
 
+        var frameCount = 10;
+        var maxJitter = 5;
+
         using (var collection = new MagickImageCollection())
         {
           var mf = new MagickFactory();
           Bitmap img = null;
-          for (var i = 0; i < 4; i++)
+          for (var i = 0; i < frameCount; i++)
           {
             img = GetTransformedImage(workerData);
+
+            // post process image
+            var jitterMag = (int)Math.Floor(maxJitter * (Math.Sin(i / (float)frameCount * Math.PI * 2)));
+            img = PostProcessImage(img, jitterMag);
+
             img.Save($@"{_outputFilePath}\ani_{i}.png", ImageFormat.Png);
 
             byte[] bmArray;
@@ -731,6 +739,31 @@ namespace Cyotek.DitheringTest
           GenComplete(img);
         }
       }
+    }
+
+    private Bitmap PostProcessImage(Bitmap img, int jitterOffsetX)
+    {
+      var newImg = new Bitmap(img);
+
+      for (int x = 0; x < img.Width; x++)
+      {
+        for (int y = 0; y < img.Height; y++)
+        {
+          if (y % 2 == 0)
+          {
+            jitterOffsetX *= -1;
+          }
+          var x2 = (x + jitterOffsetX) % img.Width;
+          if (x2 < 0)
+          {
+            x2 += img.Width;
+          }
+
+          newImg.SetPixel(x2, y, img.GetPixel(x, y));
+        }
+      }
+
+      return newImg;
     }
 
     private void GenComplete(Bitmap bm)
