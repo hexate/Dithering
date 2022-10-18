@@ -1,4 +1,4 @@
-﻿#define USEWORKER
+#define USEWORKER
 //#undef USEWORKER
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ using Cyotek.DitheringTest.Transforms;
 using Cyotek.Drawing;
 using Cyotek.Drawing.Imaging.ColorReduction;
 using Cyotek.Windows.Forms;
+using ImageMagick;
 
 /* Dithering an image using the Floyd–Steinberg algorithm in C#
  * https://www.cyotek.com/blog/dithering-an-image-using-the-floyd-steinberg-algorithm-in-csharp
@@ -674,5 +675,85 @@ namespace Cyotek.DitheringTest
     }
 
     #endregion
+
+    private string _outputFilePath = $@"c:\work\data\dithering";
+
+    private void GenButton_clicked(object sender, EventArgs e)
+    {
+      if (_image != null && !backgroundWorker.IsBusy)
+      {
+
+        IPixelTransform transform;
+        IErrorDiffusion ditherer;
+        Bitmap image;
+
+        statusToolStripStatusLabel.Text = "Running animation gen...";
+        Cursor.Current = Cursors.WaitCursor;
+        this.UseWaitCursor = true;
+
+        transform = this.GetPixelTransform();
+        ditherer = new RandomDithering(); // set to random dither
+        image = _image.Copy();
+
+        var workerData = new WorkerData
+        {
+          Image = image,
+          Transform = transform,
+          Dither = ditherer,
+          ColorCount = this.GetMaximumColorCount()
+        };
+
+        using (var collection = new MagickImageCollection())
+        {
+          var mf = new MagickFactory();
+          Bitmap img = null;
+          for (var i = 0; i < 4; i++)
+          {
+            img = GetTransformedImage(workerData);
+            img.Save($@"{_outputFilePath}\ani_{i}.png", ImageFormat.Png);
+
+            byte[] bmArray;
+            using (var stream = new MemoryStream())
+            {
+              img.Save(stream, ImageFormat.Png);
+              bmArray = stream.ToArray();
+
+              var frameImage = new MagickImage(mf.Image.Create(bmArray));
+              frameImage.AnimationDelay = 10;
+              frameImage.GifDisposeMethod = GifDisposeMethod.Background;
+              collection.Add(frameImage);
+            }
+          }
+
+          collection.OptimizeTransparency();
+          collection.Write($@"{_outputFilePath}\ani.gif");
+
+          GenComplete(img);
+        }
+      }
+    }
+
+    private void GenComplete(Bitmap bm)
+    {
+      this.CleanUpTransformed();
+
+      _transformed = bm;
+      _transformedImage = _transformed.GetPixelsFrom32BitArgbImage();
+
+      transformedImageBox.Image = _transformed;
+
+      ThreadPool.QueueUserWorkItem(state =>
+      {
+        int count;
+
+        count = this.GetColorCount(_transformedImage);
+
+        this.UpdateColorCount(transformedColorsToolStripStatusLabel, count);
+      });
+
+      statusToolStripStatusLabel.Text = string.Empty;
+      Cursor.Current = Cursors.Default;
+      this.UseWaitCursor = false;
+    }
   }
 }
