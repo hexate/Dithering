@@ -706,6 +706,8 @@ namespace Cyotek.DitheringTest
         var frameCount = 10;
         var maxJitter = 5;
 
+        var colorImg = new Bitmap(Image.FromFile($@"{_outputFilePath}\input\grem_desert_color.png"));
+
         using (var collection = new MagickImageCollection())
         {
           var mf = new MagickFactory();
@@ -716,7 +718,7 @@ namespace Cyotek.DitheringTest
 
             // post process image
             var jitterMag = (int)Math.Floor(maxJitter * (Math.Sin(i / (float)frameCount * Math.PI * 2)));
-            img = PostProcessImage(img, jitterMag);
+            img = PostProcessImage(img, colorImg, jitterMag);
 
             img.Save($@"{_outputFilePath}\ani_{i}.png", ImageFormat.Png);
 
@@ -741,7 +743,7 @@ namespace Cyotek.DitheringTest
       }
     }
 
-    private Bitmap PostProcessImage(Bitmap img, int jitterOffsetX)
+    private Bitmap PostProcessImage(Bitmap img, Bitmap colorImg, int jitterOffsetX)
     {
       var newImg = new Bitmap(img);
 
@@ -759,7 +761,13 @@ namespace Cyotek.DitheringTest
             x2 += img.Width;
           }
 
-          newImg.SetPixel(x2, y, img.GetPixel(x, y));
+          //newImg.SetPixel(x2, y, img.GetPixel(x, y));
+          var color = img.GetPixel(x, y);
+          if (color.ToArgb() == new ArgbColor(255, 0, 0, 0).ToArgb())
+          {
+            color = colorImg.GetPixel(x, y);
+          }
+          newImg.SetPixel(x2, y, color);
         }
       }
 
