@@ -42,6 +42,8 @@ namespace Cyotek.DitheringTest
 
     private ArgbColor[] _transformedImage;
 
+    private FileInfo _fileInfo;
+
     #endregion
 
     #region Constructors
@@ -480,6 +482,8 @@ namespace Cyotek.DitheringTest
       {
         using (Bitmap image = (Bitmap)Image.FromFile(fileName))
         {
+          _fileInfo = new FileInfo(fileName);
+
           this.OpenImage(image);
         }
       }
@@ -676,7 +680,7 @@ namespace Cyotek.DitheringTest
 
     #endregion
 
-    private string _outputFilePath = $@"c:\work\data\dithering";
+    //private string _outputFilePath = $@"c:\work\data\dithering";
 
     private void GenButton_clicked(object sender, EventArgs e)
     {
@@ -706,7 +710,14 @@ namespace Cyotek.DitheringTest
         var frameCount = 10;
         var maxJitter = 5;
 
-        var colorImg = new Bitmap(Image.FromFile($@"{_outputFilePath}\input\grem_desert_color.png"));
+        var colorFileName = $@"{_fileInfo.Directory.FullName}\{_fileInfo.Name.Replace(_fileInfo.Extension, "")}-color{_fileInfo.Extension}";
+        Bitmap colorImg = new Bitmap(10, 10);
+        var usingColorImg = File.Exists(colorFileName);
+
+        if (usingColorImg)
+        {
+          colorImg = new Bitmap(Image.FromFile(colorFileName));
+        }
 
         using (var collection = new MagickImageCollection())
         {
@@ -716,11 +727,16 @@ namespace Cyotek.DitheringTest
           {
             img = GetTransformedImage(workerData);
 
-            // post process image
-            var jitterMag = (int)Math.Floor(maxJitter * (Math.Sin(i / (float)frameCount * Math.PI * 2)));
+            if (!usingColorImg)
+            {
+              colorImg = img;
+            }
+
+              // post process image
+              var jitterMag = (int)Math.Floor(maxJitter * (Math.Sin(i / (float)frameCount * Math.PI * 2)));
             img = PostProcessImage(img, colorImg, jitterMag);
 
-            img.Save($@"{_outputFilePath}\ani_{i}.png", ImageFormat.Png);
+            img.Save($@"{_fileInfo.Directory.FullName}\output\ani_{i}.png", ImageFormat.Png);
 
             byte[] bmArray;
             using (var stream = new MemoryStream())
@@ -736,7 +752,7 @@ namespace Cyotek.DitheringTest
           }
 
           collection.OptimizeTransparency();
-          collection.Write($@"{_outputFilePath}\ani.gif");
+          collection.Write($@"{_fileInfo.Directory.FullName}\output\ani.gif");
 
           GenComplete(img);
         }
