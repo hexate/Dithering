@@ -710,7 +710,8 @@ namespace Cyotek.DitheringTest
         var frameCount = 10;
         var maxJitter = 5;
 
-        var colorFileName = $@"{_fileInfo.Directory.FullName}\{_fileInfo.Name.Replace(_fileInfo.Extension, "")}-color{_fileInfo.Extension}";
+        var fileName = _fileInfo.Name.Replace(_fileInfo.Extension, "");
+        var colorFileName = $@"{_fileInfo.Directory.FullName}\{fileName}-color{_fileInfo.Extension}";
         Bitmap colorImg = new Bitmap(10, 10);
         var usingColorImg = File.Exists(colorFileName);
 
@@ -736,7 +737,7 @@ namespace Cyotek.DitheringTest
               var jitterMag = (int)Math.Floor(maxJitter * (Math.Sin(i / (float)frameCount * Math.PI * 2)));
             img = PostProcessImage(img, colorImg, jitterMag);
 
-            img.Save($@"{_fileInfo.Directory.FullName}\output\ani_{i}.png", ImageFormat.Png);
+            img.Save($@"{_fileInfo.Directory.FullName}\output\{fileName}-{i}.png", ImageFormat.Png);
 
             byte[] bmArray;
             using (var stream = new MemoryStream())
@@ -752,7 +753,7 @@ namespace Cyotek.DitheringTest
           }
 
           collection.OptimizeTransparency();
-          collection.Write($@"{_fileInfo.Directory.FullName}\output\ani.gif");
+          collection.Write($@"{_fileInfo.Directory.FullName}\output\{fileName}-ani.gif");
 
           GenComplete(img);
         }
