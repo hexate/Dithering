@@ -101,6 +101,28 @@ namespace Cyotek.DitheringTest.LineRendering
     }
 
     /// <summary>
+    /// Export lines in compact Python-friendly format optimized for plotter.py
+    /// Format: Simple space-separated values, one line per segment
+    /// </summary>
+    public static void ExportToPlotterFormat(List<PlotLine> lines, string filePath)
+    {
+      using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+      {
+        // Write header comment
+        writer.WriteLine("# Plotter line data - Format: x1 y1 x2 y2");
+        writer.WriteLine($"# Lines: {lines.Count}");
+        writer.WriteLine($"# Total length: {CalculateTotalLength(lines):F2}");
+        writer.WriteLine();
+
+        // Write each line as: x1 y1 x2 y2 (space-separated, compact)
+        foreach (PlotLine line in lines)
+        {
+          writer.WriteLine($"{line.Start.X:F2} {line.Start.Y:F2} {line.End.X:F2} {line.End.Y:F2}");
+        }
+      }
+    }
+
+    /// <summary>
     /// Calculate total length of all lines
     /// </summary>
     public static float CalculateTotalLength(List<PlotLine> lines)

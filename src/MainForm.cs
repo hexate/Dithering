@@ -756,8 +756,8 @@ namespace Cyotek.DitheringTest
       using (SaveFileDialog dialog = new SaveFileDialog
       {
         Title = "Export Lines",
-        DefaultExt = "csv",
-        Filter = "CSV File (*.csv)|*.csv|JSON File (*.json)|*.json|Text File (*.txt)|*.txt|Polylines (*.txt)|*.txt|All files (*.*)|*.*",
+        DefaultExt = "txt",
+        Filter = "Plotter Format (*.txt)|*.txt|CSV File (*.csv)|*.csv|JSON File (*.json)|*.json|Polylines (*.txt)|*.txt|All files (*.*)|*.*",
         FilterIndex = 1
       })
       {
@@ -769,20 +769,20 @@ namespace Cyotek.DitheringTest
 
             switch (dialog.FilterIndex)
             {
-              case 1: // CSV
+              case 1: // Plotter Format
+                LineExporter.ExportToPlotterFormat(_currentLines, dialog.FileName);
+                break;
+              case 2: // CSV
                 LineExporter.ExportToCsv(_currentLines, dialog.FileName);
                 break;
-              case 2: // JSON
+              case 3: // JSON
                 LineExporter.ExportToJson(_currentLines, dialog.FileName);
-                break;
-              case 3: // Text
-                LineExporter.ExportToText(_currentLines, dialog.FileName);
                 break;
               case 4: // Polylines
                 LineExporter.ExportToPolylines(_currentLines, dialog.FileName);
                 break;
               default:
-                LineExporter.ExportToCsv(_currentLines, dialog.FileName);
+                LineExporter.ExportToPlotterFormat(_currentLines, dialog.FileName);
                 break;
             }
 

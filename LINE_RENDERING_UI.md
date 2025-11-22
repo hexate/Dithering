@@ -76,12 +76,18 @@ The line rendering functionality has been fully integrated into the Dithering ap
 ### Step 4: Export for Plotter
 1. Click **Export Lines...** button in the sidebar (or File menu)
 2. Choose export format:
-   - **CSV** - Simple x1,y1,x2,y2 format
+   - **Plotter Format** ⭐ (Recommended) - Compact format optimized for plotter.py
+   - **CSV** - Comma-separated x1,y1,x2,y2 format
    - **JSON** - Structured with metadata
-   - **Text** - Space-separated format
-   - **Polylines** - Optimized connected paths
-3. Save the file
-4. Use your plotter software to convert to HPGL/G-code
+   - **Polylines** - Connected paths with pen-up optimization
+3. Save the file (e.g., `lines.txt`)
+4. Use the included `plot_lines.py` script:
+   ```bash
+   python plot_lines.py lines.txt --preview  # Preview first
+   python plot_lines.py lines.txt            # Plot it!
+   ```
+
+See **PLOTTER_EXPORT.md** for complete usage guide.
 
 ## Algorithm Details
 
@@ -112,6 +118,22 @@ Circular patterns that break in light areas.
 
 ## Export Formats
 
+### Plotter Format ⭐ (Recommended)
+Compact, Python-friendly format optimized for plotter.py:
+```
+# Plotter line data - Format: x1 y1 x2 y2
+# Lines: 1523
+# Total length: 45827.32
+
+10.50 20.30 15.80 25.60
+15.80 25.60 20.10 30.20
+```
+- Space-separated values
+- One line per segment
+- 2 decimal places for compact size
+- Easy to parse in any language
+- **Use with `plot_lines.py` script** (included)
+
 ### CSV Format
 ```
 x1,y1,x2,y2
@@ -130,7 +152,7 @@ x1,y1,x2,y2
 ```
 
 ### Polylines Format
-Optimized for plotting - groups connected lines:
+Connected paths (pen-up optimization):
 ```
 10.000 20.000
 15.000 25.000
@@ -158,16 +180,35 @@ Optimized for plotting - groups connected lines:
 - Line rendering uses the image brightness (converts to grayscale)
 - Settings are independent of dithering algorithms
 
-## Project Files Modified
+## Project Files
 
-- `src/MainForm.cs` - Added line rendering methods and button event handlers
-- `src/MainForm.Designer.cs` - Added Line Rendering GroupBox with all controls to sidebar
-- `src/DitheringTest.csproj` - Added new files to project
+### Core Application
+- `src/MainForm.cs` - Line rendering methods and button event handlers
+- `src/MainForm.Designer.cs` - UI controls in sidebar
+- `src/DitheringTest.csproj` - Project configuration
 - `src/LineRendering/` - All algorithm implementations and exporters
+
+### Python Integration
+- `plot_lines.py` - Ready-to-use Python script for plotter.py
+- `PLOTTER_EXPORT.md` - Complete usage guide and examples
+
+### Documentation
+- `LINE_RENDERING_UI.md` - UI integration guide (this file)
+- `src/LineRendering/USAGE.md` - Algorithm details and code examples
 
 ## Build Status
 
 All files have been added to the project. The application should build successfully. The new controls appear in the right sidebar below "Dithering Algorithm", and menu items appear in File menu for quick access.
+
+## Quick Reference
+
+```
+Load Image → Select Algorithm → Adjust Settings → Generate Lines → Export → Plot
+     ↓              ↓                  ↓                ↓            ↓        ↓
+  File>Open   Random Walker     Spacing: 4        Preview    Plotter   plot_lines.py
+                                Darkness: 0.5       Result    Format      --preview
+                                Iterations: 1000                              then plot
+```
 
 ## UI Layout
 
