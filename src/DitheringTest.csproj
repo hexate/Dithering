@@ -83,6 +83,16 @@
     <Compile Include="Line.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="LineRendering\ConcentricCirclesRenderer.cs" />
+    <Compile Include="LineRendering\DiagonalHatchRenderer.cs" />
+    <Compile Include="LineRendering\FlowFieldRenderer.cs" />
+    <Compile Include="LineRendering\ILineRenderer.cs" />
+    <Compile Include="LineRendering\LineExporter.cs" />
+    <Compile Include="LineRendering\LineRenderHelper.cs" />
+    <Compile Include="LineRendering\LineRenderSettings.cs" />
+    <Compile Include="LineRendering\OrthogonalHatchRenderer.cs" />
+    <Compile Include="LineRendering\PlotLine.cs" />
+    <Compile Include="LineRendering\RandomWalkerRenderer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

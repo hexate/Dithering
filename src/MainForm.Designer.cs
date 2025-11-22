@@ -42,6 +42,22 @@
       this.floydSteinbergRadioButton = new System.Windows.Forms.RadioButton();
       this.noDitherRadioButton = new System.Windows.Forms.RadioButton();
       this.colorConversionGroupBox = new Cyotek.Windows.Forms.GroupBox();
+      this.lineRenderingGroupBox = new Cyotek.Windows.Forms.GroupBox();
+      this.lineRenderAlgorithmGroupBox = new Cyotek.Windows.Forms.GroupBox();
+      this.randomWalkerRadioButton = new System.Windows.Forms.RadioButton();
+      this.orthogonalHatchRadioButton = new System.Windows.Forms.RadioButton();
+      this.diagonalHatchRadioButton = new System.Windows.Forms.RadioButton();
+      this.flowFieldRadioButton = new System.Windows.Forms.RadioButton();
+      this.concentricCirclesRadioButton = new System.Windows.Forms.RadioButton();
+      this.lineRenderSettingsPanel = new System.Windows.Forms.Panel();
+      this.lineSpacingNumericUpDown = new System.Windows.Forms.NumericUpDown();
+      this.lineSpacingLabel = new System.Windows.Forms.Label();
+      this.darknessThresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
+      this.darknessThresholdLabel = new System.Windows.Forms.Label();
+      this.iterationsNumericUpDown = new System.Windows.Forms.NumericUpDown();
+      this.iterationsLabel = new System.Windows.Forms.Label();
+      this.generateLinesButton = new System.Windows.Forms.Button();
+      this.exportLinesButton = new System.Windows.Forms.Button();
       this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
       this.colorPanel = new System.Windows.Forms.Panel();
       this.paletteSizeComboBox = new System.Windows.Forms.ComboBox();
@@ -54,6 +70,8 @@
       this.noTransformRadioButton = new System.Windows.Forms.RadioButton();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.generateLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.exportLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -102,6 +120,12 @@
       this.errorDiffusionGroupBox.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
       this.colorConversionGroupBox.SuspendLayout();
+      this.lineRenderingGroupBox.SuspendLayout();
+      this.lineRenderAlgorithmGroupBox.SuspendLayout();
+      this.lineRenderSettingsPanel.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.lineSpacingNumericUpDown)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.darknessThresholdNumericUpDown)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.iterationsNumericUpDown)).BeginInit();
       this.tableLayoutPanel4.SuspendLayout();
       this.colorPanel.SuspendLayout();
       this.monochromePanel.SuspendLayout();
@@ -123,9 +147,11 @@
       this.rootSplitContainer.Panel1.Controls.Add(this.previewSplitContainer);
       // 
       // rootSplitContainer.Panel2
-      // 
+      //
+      this.rootSplitContainer.Panel2.Controls.Add(this.lineRenderingGroupBox);
       this.rootSplitContainer.Panel2.Controls.Add(this.ditheringModeGroupBox);
       this.rootSplitContainer.Panel2.Controls.Add(this.colorConversionGroupBox);
+      this.rootSplitContainer.Panel2.AutoScroll = true;
       this.rootSplitContainer.Size = new System.Drawing.Size(821, 439);
       this.rootSplitContainer.SplitterDistance = 511;
       this.rootSplitContainer.TabIndex = 3;
@@ -443,7 +469,234 @@
       this.noDitherRadioButton.Text = "&None (Nearest Color)";
       this.noDitherRadioButton.UseVisualStyleBackColor = true;
       this.noDitherRadioButton.CheckedChanged += new System.EventHandler(this.DitherCheckBoxCheckedChangedHandler);
-      // 
+      //
+      // lineRenderingGroupBox
+      //
+      this.lineRenderingGroupBox.Controls.Add(this.lineRenderSettingsPanel);
+      this.lineRenderingGroupBox.Controls.Add(this.lineRenderAlgorithmGroupBox);
+      this.lineRenderingGroupBox.Dock = System.Windows.Forms.DockStyle.Top;
+      this.lineRenderingGroupBox.Location = new System.Drawing.Point(0, 439);
+      this.lineRenderingGroupBox.Name = "lineRenderingGroupBox";
+      this.lineRenderingGroupBox.Size = new System.Drawing.Size(306, 290);
+      this.lineRenderingGroupBox.TabIndex = 2;
+      this.lineRenderingGroupBox.TabStop = false;
+      this.lineRenderingGroupBox.Text = "Line Rendering (Pen Plotter)";
+      //
+      // lineRenderAlgorithmGroupBox
+      //
+      this.lineRenderAlgorithmGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.lineRenderAlgorithmGroupBox.Controls.Add(this.randomWalkerRadioButton);
+      this.lineRenderAlgorithmGroupBox.Controls.Add(this.orthogonalHatchRadioButton);
+      this.lineRenderAlgorithmGroupBox.Controls.Add(this.diagonalHatchRadioButton);
+      this.lineRenderAlgorithmGroupBox.Controls.Add(this.flowFieldRadioButton);
+      this.lineRenderAlgorithmGroupBox.Controls.Add(this.concentricCirclesRadioButton);
+      this.lineRenderAlgorithmGroupBox.Location = new System.Drawing.Point(6, 19);
+      this.lineRenderAlgorithmGroupBox.Name = "lineRenderAlgorithmGroupBox";
+      this.lineRenderAlgorithmGroupBox.Size = new System.Drawing.Size(291, 120);
+      this.lineRenderAlgorithmGroupBox.TabIndex = 0;
+      this.lineRenderAlgorithmGroupBox.TabStop = false;
+      this.lineRenderAlgorithmGroupBox.Text = "Algorithm";
+      //
+      // randomWalkerRadioButton
+      //
+      this.randomWalkerRadioButton.AutoSize = true;
+      this.randomWalkerRadioButton.Checked = true;
+      this.randomWalkerRadioButton.Location = new System.Drawing.Point(10, 19);
+      this.randomWalkerRadioButton.Name = "randomWalkerRadioButton";
+      this.randomWalkerRadioButton.Size = new System.Drawing.Size(100, 17);
+      this.randomWalkerRadioButton.TabIndex = 0;
+      this.randomWalkerRadioButton.TabStop = true;
+      this.randomWalkerRadioButton.Text = "Random &Walker";
+      this.randomWalkerRadioButton.UseVisualStyleBackColor = true;
+      //
+      // orthogonalHatchRadioButton
+      //
+      this.orthogonalHatchRadioButton.AutoSize = true;
+      this.orthogonalHatchRadioButton.Location = new System.Drawing.Point(10, 38);
+      this.orthogonalHatchRadioButton.Name = "orthogonalHatchRadioButton";
+      this.orthogonalHatchRadioButton.Size = new System.Drawing.Size(149, 17);
+      this.orthogonalHatchRadioButton.TabIndex = 1;
+      this.orthogonalHatchRadioButton.Text = "&Orthogonal (0\u00b0/90\u00b0)";
+      this.orthogonalHatchRadioButton.UseVisualStyleBackColor = true;
+      //
+      // diagonalHatchRadioButton
+      //
+      this.diagonalHatchRadioButton.AutoSize = true;
+      this.diagonalHatchRadioButton.Location = new System.Drawing.Point(10, 57);
+      this.diagonalHatchRadioButton.Name = "diagonalHatchRadioButton";
+      this.diagonalHatchRadioButton.Size = new System.Drawing.Size(136, 17);
+      this.diagonalHatchRadioButton.TabIndex = 2;
+      this.diagonalHatchRadioButton.Text = "&Diagonal (45\u00b0/135\u00b0)";
+      this.diagonalHatchRadioButton.UseVisualStyleBackColor = true;
+      //
+      // flowFieldRadioButton
+      //
+      this.flowFieldRadioButton.AutoSize = true;
+      this.flowFieldRadioButton.Location = new System.Drawing.Point(10, 76);
+      this.flowFieldRadioButton.Name = "flowFieldRadioButton";
+      this.flowFieldRadioButton.Size = new System.Drawing.Size(73, 17);
+      this.flowFieldRadioButton.TabIndex = 3;
+      this.flowFieldRadioButton.Text = "&Flow Field";
+      this.flowFieldRadioButton.UseVisualStyleBackColor = true;
+      //
+      // concentricCirclesRadioButton
+      //
+      this.concentricCirclesRadioButton.AutoSize = true;
+      this.concentricCirclesRadioButton.Location = new System.Drawing.Point(10, 95);
+      this.concentricCirclesRadioButton.Name = "concentricCirclesRadioButton";
+      this.concentricCirclesRadioButton.Size = new System.Drawing.Size(113, 17);
+      this.concentricCirclesRadioButton.TabIndex = 4;
+      this.concentricCirclesRadioButton.Text = "&Concentric Circles";
+      this.concentricCirclesRadioButton.UseVisualStyleBackColor = true;
+      //
+      // lineRenderSettingsPanel
+      //
+      this.lineRenderSettingsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.lineRenderSettingsPanel.Controls.Add(this.exportLinesButton);
+      this.lineRenderSettingsPanel.Controls.Add(this.generateLinesButton);
+      this.lineRenderSettingsPanel.Controls.Add(this.iterationsLabel);
+      this.lineRenderSettingsPanel.Controls.Add(this.iterationsNumericUpDown);
+      this.lineRenderSettingsPanel.Controls.Add(this.darknessThresholdLabel);
+      this.lineRenderSettingsPanel.Controls.Add(this.darknessThresholdNumericUpDown);
+      this.lineRenderSettingsPanel.Controls.Add(this.lineSpacingLabel);
+      this.lineRenderSettingsPanel.Controls.Add(this.lineSpacingNumericUpDown);
+      this.lineRenderSettingsPanel.Location = new System.Drawing.Point(6, 145);
+      this.lineRenderSettingsPanel.Name = "lineRenderSettingsPanel";
+      this.lineRenderSettingsPanel.Size = new System.Drawing.Size(291, 138);
+      this.lineRenderSettingsPanel.TabIndex = 1;
+      //
+      // lineSpacingLabel
+      //
+      this.lineSpacingLabel.AutoSize = true;
+      this.lineSpacingLabel.Location = new System.Drawing.Point(4, 8);
+      this.lineSpacingLabel.Name = "lineSpacingLabel";
+      this.lineSpacingLabel.Size = new System.Drawing.Size(68, 13);
+      this.lineSpacingLabel.TabIndex = 0;
+      this.lineSpacingLabel.Text = "Line Spacing:";
+      //
+      // lineSpacingNumericUpDown
+      //
+      this.lineSpacingNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.lineSpacingNumericUpDown.DecimalPlaces = 1;
+      this.lineSpacingNumericUpDown.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+      this.lineSpacingNumericUpDown.Location = new System.Drawing.Point(150, 6);
+      this.lineSpacingNumericUpDown.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+      this.lineSpacingNumericUpDown.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+      this.lineSpacingNumericUpDown.Name = "lineSpacingNumericUpDown";
+      this.lineSpacingNumericUpDown.Size = new System.Drawing.Size(135, 20);
+      this.lineSpacingNumericUpDown.TabIndex = 1;
+      this.lineSpacingNumericUpDown.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+      //
+      // darknessThresholdLabel
+      //
+      this.darknessThresholdLabel.AutoSize = true;
+      this.darknessThresholdLabel.Location = new System.Drawing.Point(4, 34);
+      this.darknessThresholdLabel.Name = "darknessThresholdLabel";
+      this.darknessThresholdLabel.Size = new System.Drawing.Size(105, 13);
+      this.darknessThresholdLabel.TabIndex = 2;
+      this.darknessThresholdLabel.Text = "Darkness Threshold:";
+      //
+      // darknessThresholdNumericUpDown
+      //
+      this.darknessThresholdNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.darknessThresholdNumericUpDown.DecimalPlaces = 2;
+      this.darknessThresholdNumericUpDown.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+      this.darknessThresholdNumericUpDown.Location = new System.Drawing.Point(150, 32);
+      this.darknessThresholdNumericUpDown.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+      this.darknessThresholdNumericUpDown.Name = "darknessThresholdNumericUpDown";
+      this.darknessThresholdNumericUpDown.Size = new System.Drawing.Size(135, 20);
+      this.darknessThresholdNumericUpDown.TabIndex = 3;
+      this.darknessThresholdNumericUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+      //
+      // iterationsLabel
+      //
+      this.iterationsLabel.AutoSize = true;
+      this.iterationsLabel.Location = new System.Drawing.Point(4, 60);
+      this.iterationsLabel.Name = "iterationsLabel";
+      this.iterationsLabel.Size = new System.Drawing.Size(53, 13);
+      this.iterationsLabel.TabIndex = 4;
+      this.iterationsLabel.Text = "Iterations:";
+      //
+      // iterationsNumericUpDown
+      //
+      this.iterationsNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.iterationsNumericUpDown.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+      this.iterationsNumericUpDown.Location = new System.Drawing.Point(150, 58);
+      this.iterationsNumericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+      this.iterationsNumericUpDown.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+      this.iterationsNumericUpDown.Name = "iterationsNumericUpDown";
+      this.iterationsNumericUpDown.Size = new System.Drawing.Size(135, 20);
+      this.iterationsNumericUpDown.TabIndex = 5;
+      this.iterationsNumericUpDown.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+      //
+      // generateLinesButton
+      //
+      this.generateLinesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.generateLinesButton.Location = new System.Drawing.Point(122, 91);
+      this.generateLinesButton.Name = "generateLinesButton";
+      this.generateLinesButton.Size = new System.Drawing.Size(163, 23);
+      this.generateLinesButton.TabIndex = 6;
+      this.generateLinesButton.Text = "&Generate Lines";
+      this.generateLinesButton.UseVisualStyleBackColor = true;
+      this.generateLinesButton.Click += new System.EventHandler(this.generateLinesButton_Click);
+      //
+      // exportLinesButton
+      //
+      this.exportLinesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.exportLinesButton.Location = new System.Drawing.Point(122, 116);
+      this.exportLinesButton.Name = "exportLinesButton";
+      this.exportLinesButton.Size = new System.Drawing.Size(163, 23);
+      this.exportLinesButton.TabIndex = 7;
+      this.exportLinesButton.Text = "E&xport Lines...";
+      this.exportLinesButton.UseVisualStyleBackColor = true;
+      this.exportLinesButton.Click += new System.EventHandler(this.exportLinesButton_Click);
+      //
       // colorConversionGroupBox
       // 
       this.colorConversionGroupBox.Controls.Add(this.tableLayoutPanel4);
@@ -600,21 +853,37 @@
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.saveAsToolStripMenuItem,
+            this.generateLinesToolStripMenuItem,
+            this.exportLinesToolStripMenuItem,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
       this.fileToolStripMenuItem.Text = "&File";
       // 
+      // generateLinesToolStripMenuItem
+      //
+      this.generateLinesToolStripMenuItem.Name = "generateLinesToolStripMenuItem";
+      this.generateLinesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.generateLinesToolStripMenuItem.Text = "&Generate Lines...";
+      this.generateLinesToolStripMenuItem.Click += new System.EventHandler(this.generateLinesToolStripMenuItem_Click);
+      //
+      // exportLinesToolStripMenuItem
+      //
+      this.exportLinesToolStripMenuItem.Name = "exportLinesToolStripMenuItem";
+      this.exportLinesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.exportLinesToolStripMenuItem.Text = "Export &Lines...";
+      this.exportLinesToolStripMenuItem.Click += new System.EventHandler(this.exportLinesToolStripMenuItem_Click);
+      //
       // toolStripMenuItem1
-      // 
+      //
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 6);
-      // 
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+      //
       // exitToolStripMenuItem
-      // 
+      //
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.exitToolStripMenuItem.Text = "E&xit";
       this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
       // 
@@ -922,6 +1191,14 @@
       this.tableLayoutPanel1.PerformLayout();
       this.colorConversionGroupBox.ResumeLayout(false);
       this.colorConversionGroupBox.PerformLayout();
+      this.lineRenderingGroupBox.ResumeLayout(false);
+      this.lineRenderAlgorithmGroupBox.ResumeLayout(false);
+      this.lineRenderAlgorithmGroupBox.PerformLayout();
+      this.lineRenderSettingsPanel.ResumeLayout(false);
+      this.lineRenderSettingsPanel.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.lineSpacingNumericUpDown)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.darknessThresholdNumericUpDown)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.iterationsNumericUpDown)).EndInit();
       this.tableLayoutPanel4.ResumeLayout(false);
       this.tableLayoutPanel4.PerformLayout();
       this.colorPanel.ResumeLayout(false);
@@ -951,6 +1228,8 @@
     private System.Windows.Forms.MenuStrip menuStrip;
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem generateLinesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem exportLinesToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     private System.Windows.Forms.ToolStrip toolStrip;
@@ -1013,6 +1292,22 @@
     private System.Windows.Forms.ToolStripMenuItem sourceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem transformedToolStripMenuItem;
     private System.Windows.Forms.ToolStripButton copyMergedToolStripButton;
+    private Windows.Forms.GroupBox lineRenderingGroupBox;
+    private Windows.Forms.GroupBox lineRenderAlgorithmGroupBox;
+    private System.Windows.Forms.RadioButton randomWalkerRadioButton;
+    private System.Windows.Forms.RadioButton orthogonalHatchRadioButton;
+    private System.Windows.Forms.RadioButton diagonalHatchRadioButton;
+    private System.Windows.Forms.RadioButton flowFieldRadioButton;
+    private System.Windows.Forms.RadioButton concentricCirclesRadioButton;
+    private System.Windows.Forms.Panel lineRenderSettingsPanel;
+    private System.Windows.Forms.NumericUpDown lineSpacingNumericUpDown;
+    private System.Windows.Forms.Label lineSpacingLabel;
+    private System.Windows.Forms.NumericUpDown darknessThresholdNumericUpDown;
+    private System.Windows.Forms.Label darknessThresholdLabel;
+    private System.Windows.Forms.NumericUpDown iterationsNumericUpDown;
+    private System.Windows.Forms.Label iterationsLabel;
+    private System.Windows.Forms.Button generateLinesButton;
+    private System.Windows.Forms.Button exportLinesButton;
   }
 }
 

@@ -10,6 +10,7 @@ using System.Media;
 using System.Threading;
 using System.Windows.Forms;
 using Cyotek.DitheringTest.Helpers;
+using Cyotek.DitheringTest.LineRendering;
 using Cyotek.DitheringTest.Transforms;
 using Cyotek.Drawing;
 using Cyotek.Drawing.Imaging.ColorReduction;
@@ -40,6 +41,10 @@ namespace Cyotek.DitheringTest
     private Bitmap _transformed;
 
     private ArgbColor[] _transformedImage;
+
+    private List<PlotLine> _currentLines;
+
+    private RadioButton _previousLineRenderSelection;
 
     #endregion
 
@@ -671,6 +676,188 @@ namespace Cyotek.DitheringTest
         }
         previousSelection = control;
       }
+    }
+
+    #endregion
+
+    #region Line Rendering Methods
+
+    private void GenerateLines(ILineRenderer renderer, LineRenderSettings settings)
+    {
+      if (_image == null) return;
+
+      statusToolStripStatusLabel.Text = "Generating lines...";
+      Cursor.Current = Cursors.WaitCursor;
+      this.UseWaitCursor = true;
+
+      try
+      {
+        _currentLines = renderer.GenerateLines(_originalImage, _image.Size, settings);
+
+        // Render lines to bitmap for preview
+        RenderLinesToTransformed();
+
+        statusToolStripStatusLabel.Text = $"Generated {_currentLines.Count} lines, total length: {LineExporter.CalculateTotalLength(_currentLines):F2}px";
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show($"Failed to generate lines. {ex.Message}", "Line Rendering", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        statusToolStripStatusLabel.Text = "Line generation failed";
+      }
+      finally
+      {
+        Cursor.Current = Cursors.Default;
+        this.UseWaitCursor = false;
+      }
+    }
+
+    private void RenderLinesToTransformed()
+    {
+      if (_currentLines == null || _currentLines.Count == 0 || _image == null) return;
+
+      this.CleanUpTransformed();
+
+      // Create white background
+      _transformed = new Bitmap(_image.Width, _image.Height, PixelFormat.Format32bppArgb);
+
+      using (Graphics g = Graphics.FromImage(_transformed))
+      {
+        g.Clear(Color.White);
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+        using (Pen pen = new Pen(Color.Black, 1.0f))
+        {
+          foreach (PlotLine line in _currentLines)
+          {
+            g.DrawLine(pen, line.Start, line.End);
+          }
+        }
+      }
+
+      _transformedImage = _transformed.GetPixelsFrom32BitArgbImage();
+      transformedImageBox.Image = _transformed;
+
+      // Update color count
+      ThreadPool.QueueUserWorkItem(state =>
+      {
+        int count = this.GetColorCount(_transformedImage);
+        this.UpdateColorCount(transformedColorsToolStripStatusLabel, count);
+      });
+    }
+
+    private void ExportLines()
+    {
+      if (_currentLines == null || _currentLines.Count == 0)
+      {
+        MessageBox.Show("No lines to export. Please generate lines first.", "Export Lines", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return;
+      }
+
+      using (SaveFileDialog dialog = new SaveFileDialog
+      {
+        Title = "Export Lines",
+        DefaultExt = "csv",
+        Filter = "CSV File (*.csv)|*.csv|JSON File (*.json)|*.json|Text File (*.txt)|*.txt|Polylines (*.txt)|*.txt|All files (*.*)|*.*",
+        FilterIndex = 1
+      })
+      {
+        if (dialog.ShowDialog(this) == DialogResult.OK)
+        {
+          try
+          {
+            string ext = Path.GetExtension(dialog.FileName).ToLowerInvariant();
+
+            switch (dialog.FilterIndex)
+            {
+              case 1: // CSV
+                LineExporter.ExportToCsv(_currentLines, dialog.FileName);
+                break;
+              case 2: // JSON
+                LineExporter.ExportToJson(_currentLines, dialog.FileName);
+                break;
+              case 3: // Text
+                LineExporter.ExportToText(_currentLines, dialog.FileName);
+                break;
+              case 4: // Polylines
+                LineExporter.ExportToPolylines(_currentLines, dialog.FileName);
+                break;
+              default:
+                LineExporter.ExportToCsv(_currentLines, dialog.FileName);
+                break;
+            }
+
+            MessageBox.Show($"Exported {_currentLines.Count} lines to {Path.GetFileName(dialog.FileName)}", "Export Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show($"Failed to export lines. {ex.Message}", "Export Lines", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          }
+        }
+      }
+    }
+
+    private void generateLinesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      generateLinesButton_Click(sender, e);
+    }
+
+    private void exportLinesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      exportLinesButton_Click(sender, e);
+    }
+
+    private void generateLinesButton_Click(object sender, EventArgs e)
+    {
+      if (_image == null)
+      {
+        MessageBox.Show("Please load an image first.", "Generate Lines", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return;
+      }
+
+      // Get settings from UI controls
+      LineRenderSettings settings = new LineRenderSettings
+      {
+        LineSpacing = (float)lineSpacingNumericUpDown.Value,
+        DarknessThreshold = (float)darknessThresholdNumericUpDown.Value,
+        Iterations = (int)iterationsNumericUpDown.Value,
+        MaxLineLength = 50.0f,
+        Seed = 42
+      };
+
+      // Select renderer based on checked radio button
+      ILineRenderer renderer = null;
+
+      if (randomWalkerRadioButton.Checked)
+      {
+        renderer = new RandomWalkerRenderer();
+      }
+      else if (orthogonalHatchRadioButton.Checked)
+      {
+        renderer = new OrthogonalHatchRenderer();
+      }
+      else if (diagonalHatchRadioButton.Checked)
+      {
+        renderer = new DiagonalHatchRenderer();
+      }
+      else if (flowFieldRadioButton.Checked)
+      {
+        renderer = new FlowFieldRenderer();
+      }
+      else if (concentricCirclesRadioButton.Checked)
+      {
+        renderer = new ConcentricCirclesRenderer();
+      }
+      else
+      {
+        renderer = new RandomWalkerRenderer(); // Default
+      }
+
+      GenerateLines(renderer, settings);
+    }
+
+    private void exportLinesButton_Click(object sender, EventArgs e)
+    {
+      ExportLines();
     }
 
     #endregion
