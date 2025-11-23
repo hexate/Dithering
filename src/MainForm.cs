@@ -821,7 +821,7 @@ namespace Cyotek.DitheringTest
         DarknessThreshold = (float)darknessThresholdNumericUpDown.Value,
         Iterations = (int)iterationsNumericUpDown.Value,
         MaxLineLength = 50.0f,
-        Seed = 42
+        Seed = (int)seedNumericUpDown.Value
       };
 
       // Select renderer based on checked radio button

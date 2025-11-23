@@ -56,6 +56,8 @@
       this.darknessThresholdLabel = new System.Windows.Forms.Label();
       this.iterationsNumericUpDown = new System.Windows.Forms.NumericUpDown();
       this.iterationsLabel = new System.Windows.Forms.Label();
+      this.seedNumericUpDown = new System.Windows.Forms.NumericUpDown();
+      this.seedLabel = new System.Windows.Forms.Label();
       this.generateLinesButton = new System.Windows.Forms.Button();
       this.exportLinesButton = new System.Windows.Forms.Button();
       this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -126,6 +128,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.lineSpacingNumericUpDown)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.darknessThresholdNumericUpDown)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.iterationsNumericUpDown)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.seedNumericUpDown)).BeginInit();
       this.tableLayoutPanel4.SuspendLayout();
       this.colorPanel.SuspendLayout();
       this.monochromePanel.SuspendLayout();
@@ -477,7 +480,7 @@
       this.lineRenderingGroupBox.Dock = System.Windows.Forms.DockStyle.Top;
       this.lineRenderingGroupBox.Location = new System.Drawing.Point(0, 439);
       this.lineRenderingGroupBox.Name = "lineRenderingGroupBox";
-      this.lineRenderingGroupBox.Size = new System.Drawing.Size(306, 290);
+      this.lineRenderingGroupBox.Size = new System.Drawing.Size(306, 316);
       this.lineRenderingGroupBox.TabIndex = 2;
       this.lineRenderingGroupBox.TabStop = false;
       this.lineRenderingGroupBox.Text = "Line Rendering (Pen Plotter)";
@@ -556,6 +559,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.lineRenderSettingsPanel.Controls.Add(this.exportLinesButton);
       this.lineRenderSettingsPanel.Controls.Add(this.generateLinesButton);
+      this.lineRenderSettingsPanel.Controls.Add(this.seedLabel);
+      this.lineRenderSettingsPanel.Controls.Add(this.seedNumericUpDown);
       this.lineRenderSettingsPanel.Controls.Add(this.iterationsLabel);
       this.lineRenderSettingsPanel.Controls.Add(this.iterationsNumericUpDown);
       this.lineRenderSettingsPanel.Controls.Add(this.darknessThresholdLabel);
@@ -564,7 +569,7 @@
       this.lineRenderSettingsPanel.Controls.Add(this.lineSpacingNumericUpDown);
       this.lineRenderSettingsPanel.Location = new System.Drawing.Point(6, 145);
       this.lineRenderSettingsPanel.Name = "lineRenderSettingsPanel";
-      this.lineRenderSettingsPanel.Size = new System.Drawing.Size(291, 138);
+      this.lineRenderSettingsPanel.Size = new System.Drawing.Size(291, 164);
       this.lineRenderSettingsPanel.TabIndex = 1;
       //
       // lineSpacingLabel
@@ -675,10 +680,37 @@
             0,
             0});
       //
+      // seedLabel
+      //
+      this.seedLabel.AutoSize = true;
+      this.seedLabel.Location = new System.Drawing.Point(4, 86);
+      this.seedLabel.Name = "seedLabel";
+      this.seedLabel.Size = new System.Drawing.Size(75, 13);
+      this.seedLabel.TabIndex = 6;
+      this.seedLabel.Text = "Random Seed:";
+      //
+      // seedNumericUpDown
+      //
+      this.seedNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.seedNumericUpDown.Location = new System.Drawing.Point(150, 84);
+      this.seedNumericUpDown.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+      this.seedNumericUpDown.Name = "seedNumericUpDown";
+      this.seedNumericUpDown.Size = new System.Drawing.Size(135, 20);
+      this.seedNumericUpDown.TabIndex = 7;
+      this.seedNumericUpDown.Value = new decimal(new int[] {
+            42,
+            0,
+            0,
+            0});
+      //
       // generateLinesButton
       //
       this.generateLinesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.generateLinesButton.Location = new System.Drawing.Point(122, 91);
+      this.generateLinesButton.Location = new System.Drawing.Point(122, 117);
       this.generateLinesButton.Name = "generateLinesButton";
       this.generateLinesButton.Size = new System.Drawing.Size(163, 23);
       this.generateLinesButton.TabIndex = 6;
@@ -689,7 +721,7 @@
       // exportLinesButton
       //
       this.exportLinesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.exportLinesButton.Location = new System.Drawing.Point(122, 116);
+      this.exportLinesButton.Location = new System.Drawing.Point(122, 142);
       this.exportLinesButton.Name = "exportLinesButton";
       this.exportLinesButton.Size = new System.Drawing.Size(163, 23);
       this.exportLinesButton.TabIndex = 7;
@@ -1199,6 +1231,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.lineSpacingNumericUpDown)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.darknessThresholdNumericUpDown)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.iterationsNumericUpDown)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.seedNumericUpDown)).EndInit();
       this.tableLayoutPanel4.ResumeLayout(false);
       this.tableLayoutPanel4.PerformLayout();
       this.colorPanel.ResumeLayout(false);
@@ -1306,6 +1339,8 @@
     private System.Windows.Forms.Label darknessThresholdLabel;
     private System.Windows.Forms.NumericUpDown iterationsNumericUpDown;
     private System.Windows.Forms.Label iterationsLabel;
+    private System.Windows.Forms.NumericUpDown seedNumericUpDown;
+    private System.Windows.Forms.Label seedLabel;
     private System.Windows.Forms.Button generateLinesButton;
     private System.Windows.Forms.Button exportLinesButton;
   }
